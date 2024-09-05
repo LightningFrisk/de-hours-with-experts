@@ -59,25 +59,20 @@ public class SecretRecipeDecoder {
      * @return
      */
     public static String decodeString(String str) {
-        String encodedString = str; //changing for readability
+        String encodedString = str;
         StringBuilder decodedString = new StringBuilder(str.length()+1);
 
         for (int i = 0; i < encodedString.length(); i++) {
-            //loop thru string, then swap for correct letter.
-            String encodedLetter = String.valueOf(encodedString.charAt(i)); //loops thru the letters in string
+            String encodedLetter = String.valueOf(encodedString.charAt(i));
             String decodedLetter;
 
-            if(ENCODING.containsKey(encodedLetter)){ //behavior should just pass letter along if its not in cypher
+            if(ENCODING.containsKey(encodedLetter)){
                 decodedLetter = ENCODING.get(encodedLetter);
-                //System.out.println("if: " + decodedLetter);
             } else {
                 decodedLetter = encodedLetter;
-                //System.out.println("else: " + decodedLetter);
             }
             decodedString.append(decodedLetter);
         }
-
-        //System.out.println(decodedString);
         return decodedString.toString();
     }
 
@@ -87,25 +82,15 @@ public class SecretRecipeDecoder {
      * @return
      */
     public static Ingredient decodeIngredient(String line) {
-        // TODO: implement reading from text line maybe? need to look at table because data has #'s in it, but focus on getting basic functionality first then iron this out
         String[] splitLine = line.split("#");
-
-        //Ingredient x = new Ingredient("8 vgl", "hgiikf"); //use for test
-         //use for test
 
         String y = decodeString(splitLine[0]);
         String z = decodeString(splitLine[1]);
-
-//        System.out.println(y);
-//        System.out.println(z);
 
         return new Ingredient(y,z);
     }
 
     public static void main(String[] args) {
-        // TODO: implement me
-        //Ingredient secretrecipe = new Ingredient("8 vgl", "#hgiikf");  //use this for testing, need to implement reading this from file
-        //System.out.println(decodeString("8 vgl"));
         try {
             Scanner scanner = new Scanner(new File("C:\\Users\\bmxca\\GitHub\\de-hours-with-experts\\java\\src\\main\\resources\\secret_recipe.txt")); //hardcoding this path is probably not good
             String line;
@@ -120,8 +105,6 @@ public class SecretRecipeDecoder {
                 decodedIngredient = decodeIngredient(line).getDescription();
 
                 secretRecipe.append(decodedAmount + " of " + decodedIngredient + "\n");
-
-                //System.out.println(decodedAmount + " of " + decodedIngredient);
             }
             System.out.println(secretRecipe);
 
