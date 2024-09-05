@@ -1,8 +1,15 @@
 package com.labs1904;
 
-
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 
 public class SecretRecipeDecoder {
     private static Map<String, String> ENCODING = new HashMap<String, String>() {
@@ -46,14 +53,35 @@ public class SecretRecipeDecoder {
         }
     };
 
+    //Best I can tell this function works is a keyvalue pair from a hashmap.
+    //So maybe the best way to implement is string->hashmap->convert->string
+
     /**
      * Given a string named str, use the Caesar encoding above to return the decoded string.
      * @param str
      * @return
      */
     public static String decodeString(String str) {
-        // TODO: implement me
-        return "1 cup";
+        String encodedString = str; //changing for readability
+        StringBuilder decodedString = new StringBuilder(str.length()+1);
+
+        for (int i = 0; i < encodedString.length(); i++) {
+            //loop thru string, then swap for correct letter.
+            String encodedLetter = String.valueOf(encodedString.charAt(i)); //loops thru the letters in string
+            String decodedLetter;
+
+            if(ENCODING.containsKey(encodedLetter)){ //behavior should just pass letter along if its not in cypher
+                decodedLetter = ENCODING.get(encodedLetter);
+                //System.out.println("if: " + decodedLetter);
+            } else {
+                decodedLetter = encodedLetter;
+                //System.out.println("else: " + decodedLetter);
+            }
+            decodedString.append(decodedLetter);
+        }
+
+        //System.out.println(decodedString);
+        return decodedString.toString();
     }
 
     /**
@@ -62,11 +90,56 @@ public class SecretRecipeDecoder {
      * @return
      */
     public static Ingredient decodeIngredient(String line) {
-        // TODO: implement me
-        return new Ingredient("1 cup", "butter");
+        // TODO: implement reading from text line maybe? need to look at table because data has #'s in it, but focus on getting basic functionality first then iron this out
+        String[] splitLine = line.split("#");
+
+        //Ingredient x = new Ingredient("8 vgl", "hgiikf"); //use for test
+         //use for test
+
+        String y = decodeString(splitLine[0]);
+        String z = decodeString(splitLine[1]);
+
+//        System.out.println(y);
+//        System.out.println(z);
+
+        return new Ingredient(y,z);
     }
 
     public static void main(String[] args) {
         // TODO: implement me
+        //Ingredient secretrecipe = new Ingredient("8 vgl", "#hgiikf");  //use this for testing, need to implement reading this from file
+        //System.out.println(decodeString("8 vgl"));
+        try {
+            Scanner scanner = new Scanner(new File("C:\\Users\\bmxca\\GitHub\\HoursWork\\src\\main\\resources\\secret_recipe.txt")); //hardcoding this path is probably not good
+            String line;
+            String decodedAmount;
+            String decodedIngredient;
+            StringBuilder secretRecipe = new StringBuilder();
+
+            System.out.println("--- Ingredient List ---");
+            while (scanner.hasNextLine()) {
+                line = scanner.nextLine();
+                decodedAmount = decodeIngredient(line).getAmount();
+                decodedIngredient = decodeIngredient(line).getDescription();
+
+                secretRecipe.append(decodedAmount + " of " + decodedIngredient + "\n");
+
+                //System.out.println(decodedAmount + " of " + decodedIngredient);
+            }
+            System.out.println(secretRecipe);
+
+            try {
+                Path path = Paths.get("C:\\Users\\bmxca\\GitHub\\HoursWork\\src\\main\\resources\\decoded_recipe.txt");
+                Files.writeString(path, secretRecipe, StandardCharsets.UTF_8);
+            }
+            catch (IOException ex){
+                System.out.println("Invalid Write Location");
+            }
+
+            scanner.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
     }
 }
