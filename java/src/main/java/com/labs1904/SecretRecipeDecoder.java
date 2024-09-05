@@ -53,9 +53,6 @@ public class SecretRecipeDecoder {
         }
     };
 
-    //Best I can tell this function works is a keyvalue pair from a hashmap.
-    //So maybe the best way to implement is string->hashmap->convert->string
-
     /**
      * Given a string named str, use the Caesar encoding above to return the decoded string.
      * @param str
@@ -110,7 +107,7 @@ public class SecretRecipeDecoder {
         //Ingredient secretrecipe = new Ingredient("8 vgl", "#hgiikf");  //use this for testing, need to implement reading this from file
         //System.out.println(decodeString("8 vgl"));
         try {
-            Scanner scanner = new Scanner(new File("C:\\Users\\bmxca\\GitHub\\HoursWork\\src\\main\\resources\\secret_recipe.txt")); //hardcoding this path is probably not good
+            Scanner scanner = new Scanner(new File("C:\\Users\\bmxca\\GitHub\\de-hours-with-experts\\java\\src\\main\\resources\\secret_recipe.txt")); //hardcoding this path is probably not good
             String line;
             String decodedAmount;
             String decodedIngredient;
@@ -129,7 +126,7 @@ public class SecretRecipeDecoder {
             System.out.println(secretRecipe);
 
             try {
-                Path path = Paths.get("C:\\Users\\bmxca\\GitHub\\HoursWork\\src\\main\\resources\\decoded_recipe.txt");
+                Path path = Paths.get("C:\\Users\\bmxca\\GitHub\\de-hours-with-experts\\java\\src\\main\\resources\\decoded_recipe.txt");
                 Files.writeString(path, secretRecipe, StandardCharsets.UTF_8);
             }
             catch (IOException ex){
